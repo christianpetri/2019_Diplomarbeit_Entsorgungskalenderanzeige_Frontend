@@ -1,0 +1,1 @@
+# 2019_Diplomarbeit_Entsorgungskalenderanzeige_Hardware
