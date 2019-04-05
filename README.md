@@ -1,5 +1,7 @@
 # 2019 Diplomarbeit Entsorgungskalenderanzeige Frontend Hardware
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/48996164b9b44c15b973e77259bd9aa2)](https://app.codacy.com/app/christianpetri/2019_Diplomarbeit_Entsorgungskalenderanzeige_Hardware?utm_source=github.com&utm_medium=referral&utm_content=christianpetri/2019_Diplomarbeit_Entsorgungskalenderanzeige_Hardware&utm_campaign=Badge_Grade_Settings)
+
 ## Installation
 1.  [Ardunio IDE](https://www.arduino.cc/en/main/software) mit [ESP8266](https://github.com/esp8266/Arduino)  
 2.  Optional: [Visual Studio](https://visualstudio.microsoft.com/de/downloads/) mit [Arduino IDE for Visual Studio](https://marketplace.visualstudio.com/items?itemName=VisualMicro.ArduinoIDEforVisualStudio)
