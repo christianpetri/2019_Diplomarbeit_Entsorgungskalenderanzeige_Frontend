@@ -1,8 +1,8 @@
 # 2019 Diplomarbeit Entsorgungskalenderanzeige Frontend Hardware
 
-## Installation 
-1. [Ardunio IDE](https://www.arduino.cc/en/main/software) mit [ESP8266](https://github.com/esp8266/Arduino)  
-2. Optional: [Visual Studio](https://visualstudio.microsoft.com/de/downloads/) mit [Arduino IDE for Visual Studio](https://marketplace.visualstudio.com/items?itemName=VisualMicro.ArduinoIDEforVisualStudio)
+## Installation
+1.  [Ardunio IDE](https://www.arduino.cc/en/main/software) mit [ESP8266](https://github.com/esp8266/Arduino)  
+2.  Optional: [Visual Studio](https://visualstudio.microsoft.com/de/downloads/) mit [Arduino IDE for Visual Studio](https://marketplace.visualstudio.com/items?itemName=VisualMicro.ArduinoIDEforVisualStudio)
 
 ## Hardware
 [Wemos D1](https://wiki.wemos.cc/products:d1:d1_mini)  
@@ -27,8 +27,8 @@ Wenn das Led dauerhaft leuchtet, darf das entsprechende Entsorgungsgut an die St
 
 Wenn ein oder mehre Leds blinken, liegt eine Störung vor:
 
-Wenn ein Led blinkt = Keine Verbindung zum Wifi --> Netwerkname und Passwort korrekt?  Wlan ausgeschaltet?    
+Wenn ein Led blinkt = Keine Verbindung zum Wifi --> Netwerkname und Passwort korrekt?  Wlan ausgeschaltet?  
 Wenn zwei Leds blinken = Keine Verbindung zum Internet --> Hat das Wifi Zugang zum Internet?  
-Wenn drei Leds blinken = Keine Verbingung zur API --> 
+Wenn drei Leds blinken = Keine Verbingung zur API -->
 Wenn vier Leds blinken = API nicht richtig konfiguriert --> Ist der Kreis eingetragen? Ist die richtige Kreisnummer eingetragen?  
 Wenn fünf Leds blinken = Bitte richten sie die Anzeige ein --> Wlan-Name, Wlan-Passwort und den richtigen Kreis eintragen.  

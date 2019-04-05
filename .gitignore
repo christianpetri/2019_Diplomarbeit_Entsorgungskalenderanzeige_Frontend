@@ -1,0 +1,10 @@
+
+entsorgunskalender_HTTPS_Anfrage_Arduino/Release/*
+entsorgunskalender_HTTPS_Anfrage_Arduino/.vs/* 
+entsorgunskalender_HTTPS_Anfrage_Arduino/__vm/*
+entsorgunskalender_HTTPS_Anfrage_Arduino/collection_calendar_HTTPSRequest.sln
+entsorgunskalender_HTTPS_Anfrage_Arduino/collection_calendar_HTTPSRequest.vcxproj
+entsorgunskalender_HTTPS_Anfrage_Arduino/collection_calendar_HTTPSRequest.vcxproj.filters
+entsorgunskalender_HTTPS_Anfrage_Arduino/collection_calendar_HTTPSRequest.vcxproj.user
+
+

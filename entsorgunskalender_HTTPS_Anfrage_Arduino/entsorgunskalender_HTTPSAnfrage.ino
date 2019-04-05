@@ -72,9 +72,6 @@ boolean isErrorNoApi = false;
 #define ERROR_API_NOT_CONFIGURED_CORRECTLY 3
 boolean isErrorErrorApiNotConfiguredCorrectly = false;
 
-//Setup fist loop
-boolean firstLoopOnly = true;
-
 
 // constants won't change:
 const long interval = 60000;           // interval at which to blink (milliseconds) --> 60000 ms = 1 minute
@@ -82,10 +79,17 @@ const long interval = 60000;           // interval at which to blink (millisecon
 void setup() {
   // set the digital pin as output: 
   for(int i = 0; i < (sizeof(ledPin)/sizeof(int)); i++){
-    pinMode(ledPin[i], OUTPUT); 
+    pinMode(ledPin[i], OUTPUT);
+	digitalWrite(ledPin[i], HIGH);
   }
   pinMode(ledPinPowerd, OUTPUT);
   digitalWrite(ledPinPowerd,LOW); 
+  delay(1000); 
+  for (int i = 0; i < (sizeof(ledPin) / sizeof(int)); i++) {
+	  pinMode(ledPin[i], OUTPUT);
+	  digitalWrite(ledPin[i], LOW);
+  }
+  delay(500);
   #ifdef DEBUG
     Serial.begin(115200);
   #endif
@@ -111,18 +115,15 @@ void setup() {
   DEBUG_PRINTLN("IP address: ");
   DEBUG_PRINTLN(WiFi.localIP());
   delay(3000); 
+  isTheCircleIdSetProperly(path, parameter);
 }
 
 // here is where you'd put code that needs to be running all the time.
 void loop() { 
-	//lookForError(); 
 
 	if (isWifiError()) {
 		DEBUG_PRINTLN("Trying to reconnect to the WiFi");
-	} else if (firstLoopOnly) {
-		firstLoopOnly = false;
-		isTheCircleIdSetProperly(path, parameter);
-	} 
+	}  
 	else if (isIntervalDone()) {   //every interval get the Data from the API and display it.
 		String apiResponse = getDataFromAPI(path, parameter);
 		if(apiResponse != "fail"){ //if the reponse was success full, display data
@@ -170,9 +171,8 @@ boolean isIntervalDone(){
   if (millis() - previousMillis >= interval) {
     previousMillis = millis(); 
     return true;
-  } else{
+  } 
     return false;
-  }
 }
 
 String getDataFromAPI(String path, String parameter){
@@ -219,6 +219,7 @@ String getDataFromAPI(String path, String parameter){
 		else if (line.indexOf("HTTP") >= 0 && line.substring(0, 15) == "HTTP/1.1 200 OK") { 
 			isErrorNoApi = false; 
 		}
+
 		if (line == "\r") {
 			DEBUG_PRINTLN("headers received");
 			break;
@@ -341,8 +342,6 @@ boolean isBlinkLedTime() {
 	if (millis() - previousMillisBlinkLed >= 1000) {
 		previousMillisBlinkLed = millis();
 		return true;
-	}
-	else {
-		return false;
-	}
+	} 
+	return false; 
 }
