@@ -72,6 +72,10 @@ boolean isErrorNoApi = false;
 #define ERROR_API_NOT_CONFIGURED_CORRECTLY 3
 boolean isErrorErrorApiNotConfiguredCorrectly = false;
 
+//ERROR
+boolean isInternetRelatedError = false;
+boolean isWifiErrorCleared = true;
+
 
 // constants won't change:
 const long interval = 60000;           // interval at which to blink (milliseconds) --> 60000 ms = 1 minute
@@ -85,10 +89,7 @@ void setup() {
   pinMode(ledPinPowerd, OUTPUT);
   digitalWrite(ledPinPowerd,LOW); 
   delay(1000); 
-  for (int i = 0; i < (sizeof(ledPin) / sizeof(int)); i++) {
-	  pinMode(ledPin[i], OUTPUT);
-	  digitalWrite(ledPin[i], LOW);
-  }
+  turnOffStatusLeds();
   delay(500);
   #ifdef DEBUG
     Serial.begin(115200);
@@ -114,7 +115,8 @@ void setup() {
   DEBUG_PRINTLN("WiFi connected");
   DEBUG_PRINTLN("IP address: ");
   DEBUG_PRINTLN(WiFi.localIP());
-  delay(3000); 
+  turnOffStatusLeds();
+  delay(3000);
   isTheCircleIdSetProperly(path, parameter);
 }
 
@@ -123,15 +125,36 @@ void loop() {
 
 	if (isWifiError()) {
 		DEBUG_PRINTLN("Trying to reconnect to the WiFi");
+		showErrorLed(ERROR_NO_WIFI);
+		isWifiErrorCleared = false;
 	}  
-	else if (isIntervalDone()) {   //every interval get the Data from the API and display it.
-		String apiResponse = getDataFromAPI(path, parameter);
-		if(apiResponse != "fail"){ //if the reponse was success full, display data
-		  displayData(apiResponse); 
+	else if (isIntervalDone() || !isWifiErrorCleared) {   //every interval get the Data from the API and display it.
+		if (isInternetRelatedError || !isWifiErrorCleared) {
+			isWifiErrorCleared = true;
+			turnOffStatusLeds();
+			DEBUG_PRINTLN("Back online?");
+		} 
+		String apiResponse = getDataFromAPI(path, parameter); // + "demo/"
+		if(apiResponse != "fail"){ //if the reponse was successfull, display data
+			displayData(apiResponse);
+			isInternetRelatedError = false;
 		}
-	}  
-	delay(1);
-	showError();
+		else {
+			isInternetRelatedError = true;
+		}
+	}
+	else if (isInternetRelatedError) {
+		showInternetRelatedError();
+	}
+	delay(500);
+}
+
+void turnOffStatusLeds() {
+	DEBUG_PRINTLN("Turning off all the status LEDs");
+	for (int i = 0; i < (sizeof(ledPin) / sizeof(int)); i++) {
+		pinMode(ledPin[i], OUTPUT);
+		digitalWrite(ledPin[i], LOW);
+	}
 }
 
 boolean isWifiError() {
@@ -145,11 +168,9 @@ boolean isWifiError() {
 	} 
 }
 
-void showError() {  
-	if (isErrorNoWiFi) {
-		showErrorLed(ERROR_NO_WIFI);
-	}
-	else if (isErrorNoInternet) {
+void showInternetRelatedError() {  
+	
+	if (isErrorNoInternet) {
 		showErrorLed(ERROR_NO_INTERNET);
 	}
 	else if (isErrorNoApi) {
@@ -160,11 +181,7 @@ void showError() {
 			showErrorLed(ERROR_API_NOT_CONFIGURED_CORRECTLY);
 			delay(1);
 		}
-	}
-	else {
-		for (int i = 0; i < (sizeof(ledPin) / sizeof(int)); i++)   
-			digitalWrite(ledPin[i], LOW);  
-	}  
+	} 
 }
 
 boolean isIntervalDone(){
@@ -251,10 +268,9 @@ void displayData(String apiResponse){
     DEBUG_PRINTLN("==========");
     DEBUG_PRINTLN(result); 
     DEBUG_PRINTLN("=========="); 
-    //Turn off all status leds
-    for(int i = 0; i < (sizeof(ledPin)/sizeof(int)); i++){
-      digitalWrite(ledPin[i], LOW); 
-    } 
+
+	turnOffStatusLeds();
+	
 	if (result == 200000) {
 		DEBUG_PRINTLN("Error: Nothing to do. Is the circleId set correctly?");
 		DEBUG_PRINTLN("The circleId is NOT configured correctly! Please recompile the code with the correct ID");
@@ -286,7 +302,6 @@ void displayData(String apiResponse){
     #ifdef DEBUG
       Serial.flush();
     #endif
-   
 }
 
 void isTheCircleIdSetProperly(String path, String parameter) { 
