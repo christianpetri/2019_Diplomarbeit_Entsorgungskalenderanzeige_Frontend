@@ -134,7 +134,7 @@ void loop() {
 			turnOffStatusLeds();
 			DEBUG_PRINTLN("Back online?");
 		} 
-		String apiResponse = getDataFromAPI(path, parameter); // + "demo/"
+		String apiResponse = getDataFromAPI(path +"demo/", parameter); // 
 		if(apiResponse != "fail"){ //if the reponse was successfull, display data
 			displayData(apiResponse);
 			isInternetRelatedError = false;
@@ -336,6 +336,10 @@ void isTheCircleIdSetProperly(String path, String parameter) {
 		//Not OK
 		DEBUG_PRINTLN("The circleId is NOT configured correctly! Please recompile the code with the correct ID"); 
 		isErrorErrorApiNotConfiguredCorrectly = true; 
+		while (true) { //do nothing forever more
+			showErrorLed(ERROR_API_NOT_CONFIGURED_CORRECTLY);
+			delay(1);
+		}
 	}
 }
 

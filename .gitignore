@@ -1,6 +1,6 @@
 
 entsorgunskalender_HTTPS_Anfrage_Arduino/Release/*
-entsorgunskalender_HTTPS_Anfrage_Arduino/.vs/* 
+entsorgunskalender_HTTPS_Anfrage_Arduino/.vs/*
 entsorgunskalender_HTTPS_Anfrage_Arduino/__vm/*
 entsorgunskalender_HTTPS_Anfrage_Arduino/collection_calendar_HTTPSRequest.sln
 entsorgunskalender_HTTPS_Anfrage_Arduino/collection_calendar_HTTPSRequest.vcxproj
@@ -8,3 +8,8 @@ entsorgunskalender_HTTPS_Anfrage_Arduino/collection_calendar_HTTPSRequest.vcxpro
 entsorgunskalender_HTTPS_Anfrage_Arduino/collection_calendar_HTTPSRequest.vcxproj.user
 
 
+entsorgunskalender_HTTPS_Anfrage_Arduino/Debug/collection_calendar_HTTPSRequest.log
+entsorgunskalender_HTTPS_Anfrage_Arduino/Entsorgungskalenderanzeige_Frontend.sln
+.scannerwork/report-task.txt
+entsorgunskalender_HTTPS_Anfrage_Arduino/.scannerwork/*
+.scannerwork/*
