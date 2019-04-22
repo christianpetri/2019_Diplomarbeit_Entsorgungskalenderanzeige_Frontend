@@ -227,15 +227,14 @@ String getDataFromAPI(String path, String parameter){
     while (client.connected()) { 
 		String line = client.readStringUntil('\n'); 
 		DEBUG_PRINTLN(line);
+		isErrorNoApi = false;
+
 		if (line.indexOf("HTTP") >= 0 && !(line.substring(0, 15) == "HTTP/1.1 200 OK")) {  
 			DEBUG_PRINTLN("Failed to get the content!");
 			DEBUG_PRINTLN(line);
 			isErrorNoApi = true;
 			return "fail";
-		}
-		else if (line.indexOf("HTTP") >= 0 && line.substring(0, 15) == "HTTP/1.1 200 OK") { 
-			isErrorNoApi = false; 
-		}
+		}  
 
 		if (line == "\r") {
 			DEBUG_PRINTLN("headers received");
@@ -328,11 +327,7 @@ void isTheCircleIdSetProperly(String path, String parameter) {
 	DEBUG_PRINT("isTheCircleIdSetProperly: ");
 	DEBUG_PRINT(result);
 	DEBUG_PRINTLN();
-	if (result) {
-		//OK
-		DEBUG_PRINTLN("The circleId is configured correctly.");
-	}
-	else {
+	if (!result) {
 		//Not OK
 		DEBUG_PRINTLN("The circleId is NOT configured correctly! Please recompile the code with the correct ID"); 
 		isErrorErrorApiNotConfiguredCorrectly = true; 
@@ -341,6 +336,7 @@ void isTheCircleIdSetProperly(String path, String parameter) {
 			delay(1);
 		}
 	}
+	DEBUG_PRINTLN("The circleId is configured correctly.");
 }
 
 void showErrorLed(int errorNumber) { 
@@ -350,11 +346,10 @@ void showErrorLed(int errorNumber) {
 	for (int i = 0; i < (sizeof(ledPin) / sizeof(int)); i++) {
 		if (i <= errorNumber) {
 			digitalWrite(ledPin[i], toggleErrorLed);
+			continue;
 		}
-		else {
-			digitalWrite(ledPin[i], LOW);
-		} 
-	} 
+		digitalWrite(ledPin[i], LOW);  
+	}
 }
 
 boolean isBlinkLedTime() {
