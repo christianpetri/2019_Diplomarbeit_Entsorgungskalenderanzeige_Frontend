@@ -19,7 +19,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
 
-#define DEBUG; //comment out to disable Serial prints
+//#define DEBUG; //comment out to disable Serial prints
 
 #ifdef DEBUG 
 	 #define DEBUG_PRINT(x)       Serial.print(x)
@@ -49,7 +49,7 @@ const String parameter = String("?circleId=" + circleId);
 const char fingerprint[] PROGMEM = "9620a9ed9756297500f628c9ce9a1e093e3658ae"; //certificate --> until Sunday, 21. July 2019
 
 //Setup LED
-const int ledPin[5] = {D8, D7, D6, D5, D0}; 
+const int ledPin[5] = {D0, D5, D6, D7, D8}; 
 const int ledPinPower = LED_BUILTIN; //on = HIGH = successful off = LOW = not connected
 
 // Generally, you should use "unsigned long" for variables that hold time
@@ -63,14 +63,16 @@ boolean toggleErrorLed = true;
 #define ERROR_NO_WIFI 0  
 boolean isErrorNoWiFi = false;
 
-#define ERROR_NO_INTERNET 1 
-boolean isErrorNoInternet = false;
+#define ERROR_UNABLE_TO_CONNECT_TO_THE_HOST 1 
+boolean isErrorUnableToConnectToTheHost = false;
 
-#define ERROR_NO_API 2
-boolean isErrorNoApi = false;
+#define ERROR_PAGE_NOT_FOUND 2
+boolean isErrorPageNotFound = false;
 
 #define ERROR_API_NOT_CONFIGURED_CORRECTLY 3
 boolean isErrorApiNotConfiguredCorrectly = false;
+
+#define ERROR_PLEASE_RESTART_MICROCONTROLLER 4 
 
 //ERROR
 boolean isInternetRelatedError = false;
@@ -109,7 +111,7 @@ void setup() {
 			DEBUG_PRINT(" was not found");
 			DEBUG_PRINTLN();
 			showErrorLed(ERROR_NO_WIFI);
-		} 
+		}
 	}
 	DEBUG_PRINTLN("");
 	DEBUG_PRINTLN("WiFi connected");
@@ -121,32 +123,45 @@ void setup() {
 }
 
 // here is where you'd put code that needs to be running all the time.
-void loop() {
-
+void loop() { 
 	if (isWifiError()) {
-		DEBUG_PRINTLN("Trying to reconnect to the WiFi");
-		showErrorLed(ERROR_NO_WIFI);
-		isWifiErrorCleared = false;
+		tryingToReconnectToTheWifi();
 	}  
-	else if (isIntervalDone() || !isWifiErrorCleared) {   //every interval get the Data from the API and display it.
-		if (isInternetRelatedError || !isWifiErrorCleared) {
-			isWifiErrorCleared = true;
-			turnOffStatusLeds();
-			DEBUG_PRINTLN("Connected to the WiFi.");
-			DEBUG_PRINTLN("Back online?");
-		} 
-		String apiResponse = getDataFromAPI(path + "demo/", parameter); //+ "demo/"
-		isInternetRelatedError = true;
-		if(apiResponse != "fail"){ //if the reponse was successfull, display data
-			if (displayData(apiResponse)) {
-				isInternetRelatedError = false;
-			} 
-		}
+	else if (isItTimeToMakeAnApiCall()) {    
+		makeApiCall();
 	}
 	else if (isInternetRelatedError) {
 		showInternetRelatedError();
+	} 
+}
+
+boolean isItTimeToMakeAnApiCall() {
+	return isIntervalDone() || !isWifiErrorCleared;
+}
+
+void makeApiCall() {
+	if (isInternetRelatedError || !isWifiErrorCleared) {
+		isWifiErrorCleared = true;
+		turnOffStatusLeds();
+		DEBUG_PRINTLN("Connected to the WiFi.");
+		DEBUG_PRINTLN("Back online?");
 	}
+	String apiResponse = getDataFromAPI(path + "demo/", parameter); //+ "demo/"
+	isInternetRelatedError = true;
+	if (apiResponse != "fail") {
+		if (displayData(apiResponse)) {
+			isInternetRelatedError = false;
+		}
+	}
+}
+
+void tryingToReconnectToTheWifi() {
+	if (isWifiErrorCleared)
+		DEBUG_PRINTLN("Trying to reconnect to the WiFi");
 	delay(500);
+	DEBUG_PRINT(".");
+	showErrorLed(ERROR_NO_WIFI);
+	isWifiErrorCleared = false;
 }
 
 void turnOffStatusLeds() {
@@ -168,16 +183,18 @@ boolean isWifiError() {
 	} 
 }
 
-void showInternetRelatedError() {  
-	
-	if (isErrorNoInternet) {
-		showErrorLed(ERROR_NO_INTERNET);
+void showInternetRelatedError() {
+	if (isErrorUnableToConnectToTheHost) {
+		showErrorLed(ERROR_UNABLE_TO_CONNECT_TO_THE_HOST);
+		DEBUG_PRINTLN("Unable to connect to the Host / API");
 	}
-	else if (isErrorNoApi) {
-		showErrorLed(ERROR_NO_API);
+	else if (isErrorPageNotFound) {
+		showErrorLed(ERROR_PAGE_NOT_FOUND);
+		DEBUG_PRINTLN("API: Page not found");
 	}
 	else if (isErrorApiNotConfiguredCorrectly) {
 		showErrorLed(ERROR_API_NOT_CONFIGURED_CORRECTLY);
+		DEBUG_PRINTLN("API is not configured correctly");
 	} 
 }
 
@@ -198,10 +215,10 @@ String getDataFromAPI(String path, String parameter){
     DEBUG_PRINT("Using fingerprint ");
     DEBUG_PRINTLN(fingerprint);
     client.setFingerprint(fingerprint);
-    isErrorNoInternet = false;
+    isErrorUnableToConnectToTheHost = false;
 	if (!client.connect(host, httpsPort)) {
 		DEBUG_PRINTLN("connection failed"); 
-		isErrorNoInternet = true;
+		isErrorUnableToConnectToTheHost = true;
 		return "fail";
 	} 
     DEBUG_PRINT("requesting URL: ");
@@ -220,11 +237,11 @@ String getDataFromAPI(String path, String parameter){
 		String line = client.readStringUntil('\n'); 
 		DEBUG_PRINTLN(line);
 
-		isErrorNoApi = false;
+		isErrorPageNotFound = false;
 		if (line.indexOf("HTTP") >= 0 && !(line.substring(0, 15) == "HTTP/1.1 200 OK")) {  
 			DEBUG_PRINTLN("Failed to get the content!");
 			DEBUG_PRINTLN(line);
-			isErrorNoApi = true;
+			isErrorPageNotFound = true;
 			return "fail";
 		}  
 		if (line == "\r") {
@@ -238,9 +255,9 @@ String getDataFromAPI(String path, String parameter){
     } 
       
 	DEBUG_PRINTLN("Reading the body of the GET request. Result:"); 
-	String httpGetResponseBody = client.readStringUntil('\n');
-	DEBUG_PRINTLN(httpGetResponseBody);
-    //now output HTML data header
+	String httpGetResponseBody = client.readStringUntil('\n'); 
+	DEBUG_PRINTLN(httpGetResponseBody); 
+	//now output HTML data header
     client.println("HTTP/1.1 204");
     client.println();
     client.println();
@@ -274,19 +291,19 @@ boolean displayData(String apiResponse){
 	} else if(result == 100000){
 		DEBUG_PRINTLN("Nothing to do");
     } else {
-		if( (result / 10000) % 10  == 1){
+		if( int(result / 10000) % 10  == 1){
 			DEBUG_PRINTLN("Turn on LED 1: green waste");
 			digitalWrite(ledPin[0], HIGH);
 		} 
-		if( (result / 1000) % 10  == 1){
+		if( int(result / 1000) % 10  == 1){
 			DEBUG_PRINTLN("Turn on LED 2: cardboard");
 			digitalWrite(ledPin[1], HIGH);
 		} 
-		if( (result / 100) % 10  == 1){
+		if( int(result / 100) % 10  == 1){
 			DEBUG_PRINTLN("Turn on LED 3: general waste and 'bulky goods'");
 			digitalWrite(ledPin[2], HIGH);
 		} 
-		if( (result / 10) % 10  == 1){
+		if( int(result / 10) % 10  == 1){
 			DEBUG_PRINTLN("Turn on LED 4: metal");
 			digitalWrite(ledPin[3], HIGH);
 		} 
@@ -304,36 +321,37 @@ void isTheCircleIdSetProperly(String path, String parameter) {
 	DEBUG_PRINT(callPath);
 	DEBUG_PRINT(parameter);
 	DEBUG_PRINTLN();
-	String response = getDataFromAPI(callPath, parameter);
-	DEBUG_PRINTLN(response); 
-	if(response == "fail"){
-		for (int i = 0; i < 10; i++) { //try 10 more times to get a response
-			if (WiFi.status() == WL_DISCONNECTED) {
-				DEBUG_PRINTLN("Trying to reconnect to the WiFi");
-				showErrorLed(ERROR_NO_WIFI);
+	String response = getDataFromAPI(callPath, parameter); 
+	if(response != "fail"){
+		int result = response.toInt();
+		DEBUG_PRINT("isTheCircleIdSetProperly (1=yes, 0=no): ");
+		DEBUG_PRINT(result);
+		DEBUG_PRINTLN();
+		if (!result) {  
+			DEBUG_PRINTLN("The circleId is NOT configured correctly! Please recompile the code with the correct ID");
+			
+			//isErrorApiNotConfiguredCorrectly = true;
+			while (true) { //do nothing forever more
+				showErrorLed(ERROR_API_NOT_CONFIGURED_CORRECTLY);
 				delay(1);
 			}
-			else {
-				response = getDataFromAPI(callPath, parameter); 
-				if (response != "fail")
-					break; 
-			}
-		} 
+		}
+		DEBUG_PRINTLN("The circleId is configured correctly.");
 	}
-	int result = response.toInt();
-	DEBUG_PRINT("isTheCircleIdSetProperly: ");
-	DEBUG_PRINT(result);
-	DEBUG_PRINTLN();
-	if (!result) {
-		//Not OK
-		DEBUG_PRINTLN("The circleId is NOT configured correctly! Please recompile the code with the correct ID"); 
-		isErrorApiNotConfiguredCorrectly = true; 
-		while (true) { //do nothing forever more
-			showErrorLed(ERROR_API_NOT_CONFIGURED_CORRECTLY);
+	else {
+		DEBUG_PRINTLN("Something went wrong with the API call. Please restart the microcontroller.");
+		int counter = 0;
+		while (true) { //do nothing forever more 
+			counter++; 
+			if(counter <= 5000)
+				showErrorLed(ERROR_PLEASE_RESTART_MICROCONTROLLER);
+			else if(counter > 5000)
+				showInternetRelatedError(); 
+			if (counter >= 10000)
+				counter = 0;
 			delay(1);
 		}
-	}
-	DEBUG_PRINTLN("The circleId is configured correctly.");
+	} 
 }
 
 void showErrorLed(int errorNumber) { 
