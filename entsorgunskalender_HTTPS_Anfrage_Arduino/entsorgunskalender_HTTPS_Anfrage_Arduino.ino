@@ -19,7 +19,7 @@
 #include <ESP8266WiFi.h>
 #include <WiFiClientSecure.h>
 
-//#define DEBUG; //comment out to disable Serial prints
+#define DEBUG; //comment out to disable Serial prints
 
 #ifdef DEBUG 
 	 #define DEBUG_PRINT(x)       Serial.print(x)
@@ -75,7 +75,7 @@ boolean isErrorApiNotConfiguredCorrectly = false;
 #define ERROR_PLEASE_RESTART_MICROCONTROLLER 4 
 
 //ERROR
-boolean isInternetRelatedError = false;
+boolean isThereAConnectionRelatedError = false;
 boolean isWifiErrorCleared = true;
 
 
@@ -123,16 +123,16 @@ void setup() {
 }
 
 // here is where you'd put code that needs to be running all the time.
-void loop() { 
+void loop() {
 	if (isWifiError()) {
 		tryingToReconnectToTheWifi();
-	}  
-	else if (isItTimeToMakeAnApiCall()) {    
+	}
+	else if (isItTimeToMakeAnApiCall()) {  
 		makeApiCall();
 	}
-	else if (isInternetRelatedError) {
-		showInternetRelatedError();
-	} 
+	else if (isThereAConnectionRelatedError) {
+		showConnectionRelatedError();
+	}
 }
 
 boolean isItTimeToMakeAnApiCall() {
@@ -140,17 +140,17 @@ boolean isItTimeToMakeAnApiCall() {
 }
 
 void makeApiCall() {
-	if (isInternetRelatedError || !isWifiErrorCleared) {
+	if (isThereAConnectionRelatedError || !isWifiErrorCleared) {
 		isWifiErrorCleared = true;
 		turnOffStatusLeds();
 		DEBUG_PRINTLN("Connected to the WiFi.");
 		DEBUG_PRINTLN("Back online?");
 	}
 	String apiResponse = getDataFromAPI(path + "demo/", parameter); //+ "demo/"
-	isInternetRelatedError = true;
+	isThereAConnectionRelatedError = true;
 	if (apiResponse != "fail") {
-		if (displayData(apiResponse)) {
-			isInternetRelatedError = false;
+		if (isAbleToDisplayDataSuccessfully(apiResponse)) {
+			isThereAConnectionRelatedError = false;
 		}
 	}
 }
@@ -183,7 +183,7 @@ boolean isWifiError() {
 	} 
 }
 
-void showInternetRelatedError() {
+void showConnectionRelatedError() {
 	if (isErrorUnableToConnectToTheHost) {
 		showErrorLed(ERROR_UNABLE_TO_CONNECT_TO_THE_HOST);
 		DEBUG_PRINTLN("Unable to connect to the Host / API");
@@ -220,10 +220,10 @@ String getDataFromAPI(String path, String parameter){
 		DEBUG_PRINTLN("connection failed"); 
 		isErrorUnableToConnectToTheHost = true;
 		return "fail";
-	} 
+	}
     DEBUG_PRINT("requesting URL: ");
     DEBUG_PRINTLN(path + parameter);
-  
+
     client.print(String("GET ") + path + parameter + " HTTP/1.1\r\n" +
                  "Host: " + host + "\r\n" +
                  "User-Agent: ESP8266\r\n" +
@@ -254,22 +254,22 @@ String getDataFromAPI(String path, String parameter){
 		}
     } 
       
-	DEBUG_PRINTLN("Reading the body of the GET request. Result:"); 
-	String httpGetResponseBody = client.readStringUntil('\n'); 
-	DEBUG_PRINTLN(httpGetResponseBody); 
+	DEBUG_PRINTLN("Reading the body of the GET request. Result:");
+	String httpGetResponseBody = client.readStringUntil('\n');
+	DEBUG_PRINTLN(httpGetResponseBody);
 	//now output HTML data header
     client.println("HTTP/1.1 204");
     client.println();
     client.println();
     delay(1);
     //stopping client
-    DEBUG_PRINTLN("closing connection"); 
-    client.stop(); 
+    DEBUG_PRINTLN("closing connection");
+    client.stop();
 	DEBUG_PRINTLN("END: getDataFromAPI");
 	return httpGetResponseBody;
 }
 
-boolean displayData(String apiResponse){
+boolean isAbleToDisplayDataSuccessfully(String apiResponse){
 	int result = apiResponse.toInt(); 
     DEBUG_PRINTLN("reply was:");
     DEBUG_PRINTLN("==========");
@@ -346,7 +346,7 @@ void isTheCircleIdSetProperly(String path, String parameter) {
 			if(counter <= 5000)
 				showErrorLed(ERROR_PLEASE_RESTART_MICROCONTROLLER);
 			else if(counter > 5000)
-				showInternetRelatedError(); 
+				showConnectionRelatedError(); 
 			if (counter >= 10000)
 				counter = 0;
 			delay(1);
