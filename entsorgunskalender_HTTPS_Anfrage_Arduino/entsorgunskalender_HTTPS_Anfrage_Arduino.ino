@@ -49,7 +49,7 @@ const String parameter = String("?circleId=" + circleId);
 const char fingerprint[] PROGMEM = "9620a9ed9756297500f628c9ce9a1e093e3658ae"; //certificate --> until Sunday, 21. July 2019
 
 //Setup LED
-const int ledPin[5] = {D0, D5, D6, D7, D8}; 
+const int ledPin[5] = {D8, D7, D6, D5 , D0 };
 const int ledPinPower = LED_BUILTIN; //on = HIGH = successful off = LOW = not connected
 
 // Generally, you should use "unsigned long" for variables that hold time
