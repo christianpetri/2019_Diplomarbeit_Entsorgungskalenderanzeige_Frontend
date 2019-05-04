@@ -65,19 +65,21 @@ boolean isErrorNoWiFi = false;
 
 #define ERROR_UNABLE_TO_CONNECT_TO_THE_HOST 1 
 boolean isErrorUnableToConnectToTheHost = false;
+boolean lastKnowStatusErrorUnableToConnectToTheHost = false;
 
 #define ERROR_PAGE_NOT_FOUND 2
 boolean isErrorPageNotFound = false;
+boolean lastKnowStatusErrorPageNotFound = false;
 
 #define ERROR_API_NOT_CONFIGURED_CORRECTLY 3
 boolean isErrorApiNotConfiguredCorrectly = false;
+boolean lastKnowStatusErrorApiNotConfiguredCorrectly = false;
 
 #define ERROR_PLEASE_RESTART_MICROCONTROLLER 4 
 
 //ERROR
 boolean isThereAConnectionRelatedError = false;
 boolean isWifiErrorCleared = true;
-
 
 // constants won't change:
 const long interval = 60000;           // interval at which to blink (milliseconds) --> 60000 ms = 1 minute
@@ -146,7 +148,7 @@ void makeApiCall() {
 		DEBUG_PRINTLN("Connected to the WiFi.");
 		DEBUG_PRINTLN("Back online?");
 	}
-	String apiResponse = getDataFromAPI(path + "demo/", parameter); //+ "demo/"
+	String apiResponse = getDataFromAPI(path, parameter); //+ "demo/"
 	isThereAConnectionRelatedError = true;
 	if (apiResponse != "fail") {
 		if (isAbleToDisplayDataSuccessfully(apiResponse)) {
@@ -186,16 +188,22 @@ boolean isWifiError() {
 void showConnectionRelatedError() {
 	if (isErrorUnableToConnectToTheHost) {
 		showErrorLed(ERROR_UNABLE_TO_CONNECT_TO_THE_HOST);
-		DEBUG_PRINTLN("Unable to connect to the Host / API");
+		if(!lastKnowStatusErrorUnableToConnectToTheHost)
+			DEBUG_PRINTLN("Unable to connect to the Host / API");
 	}
 	else if (isErrorPageNotFound) {
 		showErrorLed(ERROR_PAGE_NOT_FOUND);
-		DEBUG_PRINTLN("API: Page not found");
+		if(!lastKnowStatusErrorPageNotFound)
+			DEBUG_PRINTLN("API: Page not found (Status != 'HTTP 200 OK'");
 	}
 	else if (isErrorApiNotConfiguredCorrectly) {
 		showErrorLed(ERROR_API_NOT_CONFIGURED_CORRECTLY);
-		DEBUG_PRINTLN("API is not configured correctly");
-	} 
+		if(!lastKnowStatusErrorApiNotConfiguredCorrectly)
+			DEBUG_PRINTLN("API is not configured correctly");
+	}
+	lastKnowStatusErrorUnableToConnectToTheHost = isErrorUnableToConnectToTheHost;
+	lastKnowStatusErrorPageNotFound = isErrorPageNotFound;
+	lastKnowStatusErrorApiNotConfiguredCorrectly = isErrorApiNotConfiguredCorrectly;
 }
 
 boolean isIntervalDone(){
