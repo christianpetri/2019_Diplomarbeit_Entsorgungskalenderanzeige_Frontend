@@ -20,8 +20,6 @@
 #include <WiFiClientSecure.h>
 #include <userConfiguration.h>
 
-#define DEBUG //comment out to disable Serial prints
-
 #ifdef DEBUG
 #define DEBUG_PRINT(x) Serial.print(x)
 #define DEBUG_PRINTDEC(x) Serial.print(x, DEC)
@@ -36,7 +34,7 @@ const char *ssid = WIFI_NAME;
 const char *password = WIFI_PASSWORD;
 
 const char *host = HOST;
-
+ 
 const String circleId = String(CIRCLE_ID);
 const int httpsPort = 443;
 const String path = "/plain/";
@@ -48,12 +46,19 @@ const String parameter = String("?circleId=" + circleId);
 const char fingerprint[] PROGMEM = FINGERPRINT;
 
 //Setup LED
-const int ledPin[5] = {D8, D7, D6, D5, D0};
-const int ledPinPower = LED_BUILTIN; //on = HIGH = successful off = LOW = not connected
+const int ledPin[5] =
+	{
+		LED_GREEN_WASTE_PIN,
+		LED_CARDBORD_WASTE_PIN,
+		LED_GENERAL_WASTE_AND_BULKY_GOODS_PIN,
+		LED_METAL_WASTE_PIN,
+		LED_PAPER_WASTE_PIN
+	};
+const int ledPinPower = LED_POWER_PIN; //on = HIGH = successful off = LOW = not connected
 
 // Generally, you should use "unsigned long" for variables that hold time
 // The value will quickly become too large for an int to store
-unsigned long previousMillis = 60000;			// will store last time LED was updated
+unsigned long previousMillis = 60000;	 // will store last time LED was updated
 unsigned long previousMillisBlinkLed = 0; // will store last time the LED  blinked
 
 //Error LEDs
@@ -91,14 +96,13 @@ const long interval = 60000; // interval at which to blink (milliseconds) --> 60
 
 //declare functions
 void isTheCircleIdSetProperly(String path, String parameter);
-boolean isItTimeToMakeAnApiCall();
+boolean isItTimeToMakeAnApiCall(); 
 void makeApiCall();
 String getDataFromAPI(String path, String parameter);
 boolean isAbleToDisplayDataSuccessfully(String apiResponse);
 void tryingToReconnectToTheWifi();
 void turnOffStatusLeds();
-boolean isBlinkLedTime();
-boolean isItTimeToMakeAnApiCall();
+boolean isBlinkLedTime(); 
 boolean isIntervalDone();
 void showConnectionRelatedError();
 void showErrorLed(unsigned int errorNumber);
@@ -179,7 +183,13 @@ void makeApiCall()
 		DEBUG_PRINTLN("Connected to the WiFi.");
 		DEBUG_PRINTLN("Back online?");
 	}
-	String apiResponse = getDataFromAPI(path, parameter); //+ "demo/"
+
+	#ifdef DEMO
+		String apiResponse = getDataFromAPI(path + "demo/", parameter);
+	#else
+		String apiResponse = getDataFromAPI(path, parameter); 
+	#endif
+	
 	isThereAConnectionRelatedError = true;
 	if (apiResponse != "fail")
 	{
@@ -289,9 +299,9 @@ String getDataFromAPI(String path, String parameter)
 	DEBUG_PRINTLN(path + parameter);
 
 	client.print(String("GET ") + path + parameter + " HTTP/1.1\r\n" +
-							 "Host: " + host + "\r\n" +
-							 "User-Agent: ESP8266\r\n" +
-							 "Connection: close\r\n\r\n");
+				 "Host: " + host + "\r\n" +
+				 "User-Agent: ESP8266\r\n" +
+				 "Connection: close\r\n\r\n");
 
 	DEBUG_PRINTLN("request sent");
 
