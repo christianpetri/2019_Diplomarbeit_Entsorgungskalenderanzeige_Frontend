@@ -1,0 +1,7 @@
+organization=christianpetri-github
+projectKey=christianpetri_2019_Diplomarbeit_Entsorgungskalenderanzeige_Hardware
+serverUrl=https://sonarcloud.io
+serverVersion=7.8.0.23279
+dashboardUrl=https://sonarcloud.io/dashboard?id=christianpetri_2019_Diplomarbeit_Entsorgungskalenderanzeige_Hardware
+ceTaskId=AWnuEekhBqjuEZ89tnSA
+ceTaskUrl=https://sonarcloud.io/api/ce/task?id=AWnuEekhBqjuEZ89tnSA
