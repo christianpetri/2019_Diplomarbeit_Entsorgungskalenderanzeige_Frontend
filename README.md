@@ -34,7 +34,7 @@ Wenn ein Led blinkt = Keine Verbindung zum Wifi --> Netwerkname und Passwort kor
 Wenn zwei Leds blinken = Keine Verbindung zum Host («Internet») --> Hat das Wifi Zugang zum Internet?  
 Wenn drei Leds blinken = Die aufgerufene URL gibt keinen "HTTP 200 OK"-Status zurück --> Ist die Abfrage korrekt konfiguriert? Hat die API sich verändert?  
 Wenn vier Leds blinken = API nicht richtig konfiguriert --> Ist der Kreis eingetragen? Ist die richtige Kreisnummer eingetragen?  
-Wenn fünf Leds blinken = Bitte richten sie die Anzeige ein --> Wlan-Name, Wlan-Passwort und den richtigen Kreis eintragen.  
+Wenn fünf Leds blinken = Bitte starten Sie die Anzeige neu --> Sekundäre Fehlermeldung beachten    
 
 ## Bemerkung: Die Lösung wurde mit den folgenden Tools entwickelt
 1.  [Ardunio IDE](https://www.arduino.cc/en/main/software) mit [ESP8266](https://github.com/esp8266/Arduino)  
