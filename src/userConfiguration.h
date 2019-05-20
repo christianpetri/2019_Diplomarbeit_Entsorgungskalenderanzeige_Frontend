@@ -22,7 +22,7 @@ Make sure that the "" are set correctly.
 //Please enter your circle-ID
 #define CIRCLE_ID 5
 
-//Please enter you host
+//Please enter your host
 #define HOST "www.entsorgungskalenderanzeige.christianpetri.ch"
 // Use web browser to view and copy
 // SHA1 fingerprint of the certificate
