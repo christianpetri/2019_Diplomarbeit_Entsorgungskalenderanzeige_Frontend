@@ -2,17 +2,19 @@
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/48996164b9b44c15b973e77259bd9aa2)](https://app.codacy.com/app/christianpetri/2019_Diplomarbeit_Entsorgungskalenderanzeige_Hardware?utm_source=github.com&utm_medium=referral&utm_content=christianpetri/2019_Diplomarbeit_Entsorgungskalenderanzeige_Hardware&utm_campaign=Badge_Grade_Settings)[![Build Status](https://travis-ci.com/christianpetri/2019_Diplomarbeit_Entsorgungskalenderanzeige_Frontend.svg?branch=master)](https://travis-ci.com/christianpetri/2019_Diplomarbeit_Entsorgungskalenderanzeige_Frontend)
 
+## Bau der Hardware
+[Bauanleitung auf Instructables](https://www.instructables.com/id/Entsorgungskalenderanzeige-Frontend-Diplomarbeit-H/)  
+Hardware basiert auf dem [Wemos D1 mini](https://wiki.wemos.cc/products:d1:d1_mini)  
+In der folgenden Abbildung ist der Schaltplan, wie die fünf LEDs angeschlossen werden.
+![Schaltplan](bilder/schaltplan.png)
+
 ## Installation für die Nutzung // Code kompilieren und hochladen
 1.  [Visual Studio Code](https://code.visualstudio.com/)
 2.  [PlatformIO IDE](https://platformio.org/platformio-ide)
 
-## Hardware
-[Wemos D1](https://wiki.wemos.cc/products:d1:d1_mini)  
-
-## Einsatz der Hardware
-
-5 Leds an den gewünschten Pin anschliessen (im Code definiert), kompellieren und auf den Wemos D1 mini hochladen.
-![Schaltplan](bilder/schaltplan.png)
+### Konfiguration und Einsatz der Entsorgungskalenderanzeige
+Bitte tragen Sie ihre den Wlan-Namen / Passwort und Ihren Entsorgungskreis in der Datei 'src/userConfiguration.h' ein.
+Die fünf LEDs an den gewünschten Pin anschliessen (im Code definiert), kompellieren und auf den Wemos D1 mini hochladen.
 
 ## Benutzerhandbuch
 
