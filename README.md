@@ -13,8 +13,25 @@ In der folgenden Abbildung ist der Schaltplan, wie die fünf LEDs angeschlossen 
 2.  [PlatformIO IDE](https://platformio.org/platformio-ide)
 
 ### Konfiguration und Einsatz der Entsorgungskalenderanzeige
-Bitte tragen Sie ihre den Wlan-Namen / Passwort und Ihren Entsorgungskreis in der Datei 'src/userConfiguration.h' ein.
+Bitte tragen Sie ihre den Wlan-Namen / Passwort und Ihren Entsorgungskreis (siehe unten) in der Datei 'src/userConfiguration.h' ein.
 Die fünf LEDs an den gewünschten Pin anschliessen (im Code definiert), kompellieren und auf den Wemos D1 mini hochladen.
+
+In der Gemeinde Rapperswil-Jona liegen folgenden Kreise vor (Stand 2019):  
+Jeder Kreis der Gemeinde hat eine ID und einen Kreisbeschreibung:  
+
+|Kreis ID|Kreisbeschreibung|
+|--------|-----------------|
+|1       |1                |
+|2       |1a               |
+|3       |1b               |
+|4       |2                |
+|5       |3                |
+|6       |4                |
+|7       |5                |
+|8       |6                |
+|9       |7                |
+|10      |8                |
+|11      |9                |
 
 ## Benutzerhandbuch
 
