@@ -58,3 +58,17 @@ Wenn fünf Leds blinken = Bitte starten Sie die Anzeige neu --> Sekundäre Fehle
 ## Bemerkung: Die Lösung wurde mit den folgenden Tools entwickelt
 1.  [Ardunio IDE](https://www.arduino.cc/en/main/software) mit [ESP8266](https://github.com/esp8266/Arduino)  
 2.  [Visual Studio](https://visualstudio.microsoft.com/de/downloads/) mit [Arduino IDE for Visual Studio](https://marketplace.visualstudio.com/items?itemName=VisualMicro.ArduinoIDEforVisualStudio)
+
+## Deklaration der Dateien
+### selbst erzeugt
+bilder/schaltpan.png 
+src\entsorgunskalender_HTTPS_Anfrage_Arduino.cpp
+src\userConfiguration.h
+### von Too erzeugt / übernommen, aber abgeändert
+README.md
+.gitignore
+platformio.ini
+
+### von Too erzeugt
+.gitattributes
+.travis.yml
