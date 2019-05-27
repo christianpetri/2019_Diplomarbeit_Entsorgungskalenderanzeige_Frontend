@@ -1,6 +1,6 @@
-.pio
-.pioenvs
-.piolibdeps
-.vscode
+.pio/
+.pioenvs/
+.piolibdeps/
+.vscode/
 *.ipch
-.vscode
+.vscode/ipch/2f98ceb55b38cc5/ENTSORGUNSKALENDER_HTTPS_ANFRAGE_ARDUINO.ipch
