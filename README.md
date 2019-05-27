@@ -14,7 +14,7 @@ In der folgenden Abbildung ist der Schaltplan, wie die fünf LEDs angeschlossen 
 
 ### Konfiguration und Einsatz der Entsorgungskalenderanzeige
 Bitte tragen Sie ihre den Wlan-Namen / Passwort und Ihren Entsorgungskreis (siehe unten) in der Datei 'src/userConfiguration.h' ein.
-Die fünf LEDs an den gewünschten Pin anschliessen (im Code definiert), kompellieren und auf den Wemos D1 mini hochladen.
+Die fünf LEDs an den gewünschten Pin anschliessen (im Code definiert), kompilieren und auf den Wemos D1 mini hochladen.  
 
 In der Gemeinde Rapperswil-Jona liegen folgenden Kreise vor (Stand 2019):  
 Jeder Kreis der Gemeinde hat eine ID und einen Kreisbeschreibung:  
@@ -61,14 +61,14 @@ Wenn fünf Leds blinken = Bitte starten Sie die Anzeige neu --> Sekundäre Fehle
 
 ## Deklaration der Dateien
 ### selbst erzeugt
-bilder/schaltpan.png 
-src\entsorgunskalender_HTTPS_Anfrage_Arduino.cpp
-src\userConfiguration.h
+bilder\schaltpan.png  
+src\entsorgunskalender_HTTPS_Anfrage_Arduino.cpp  
+src\userConfiguration.h  
 ### von Too erzeugt / übernommen, aber abgeändert
-README.md
-.gitignore
-platformio.ini
+README.md  
+.gitignore  
+platformio.ini  
 
 ### von Too erzeugt
-.gitattributes
-.travis.yml
+.gitattributes  
+.travis.yml  
