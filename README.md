@@ -64,11 +64,11 @@ Wenn fünf Leds blinken = Bitte starten Sie die Anzeige neu --> Sekundäre Fehle
 bilder\schaltpan.png  
 src\entsorgunskalender_HTTPS_Anfrage_Arduino.cpp  
 src\userConfiguration.h  
-### von Too erzeugt / übernommen, aber abgeändert
+### von Tool erzeugt / übernommen, aber verändert
 README.md  
 .gitignore  
 platformio.ini  
 
-### von Too erzeugt
+### von Tool erzeugt
 .gitattributes  
 .travis.yml  
