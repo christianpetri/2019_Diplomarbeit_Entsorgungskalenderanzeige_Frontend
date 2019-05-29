@@ -232,7 +232,7 @@ boolean isWifiError()
 		isErrorNoWiFi = false;
 		return false;
 	}
-	return false;
+	return true;
 }
 
 void showConnectionRelatedError()
