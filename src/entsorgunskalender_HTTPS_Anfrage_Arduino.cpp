@@ -286,7 +286,7 @@ String getDataFromAPI(String path, String parameter)
 	DEBUG_PRINTLN("connecting to ");
 	DEBUG_PRINTLN(host);
 	DEBUG_PRINT("Using fingerprint ");
-	DEBUG_PRINTLN(fingerprint);
+	DEBUG_PRINTLN(String(fingerprint));
 	client.setFingerprint(fingerprint);
 	isErrorUnableToConnectToTheHost = false;
 	if (!client.connect(host, httpsPort))
